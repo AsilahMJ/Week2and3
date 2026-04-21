@@ -32,9 +32,9 @@ public class PlatformerControl : MonoBehaviour
     void OnMove(InputValue value)
     {
         moveDir = value.Get<Vector2>();
-        playerAnim.SetBool("isRunning", rb.linearVelocity.x != 0);
+    
+        playerAnim.SetBool("isRunning", moveDir.x != 0);
 
-        // ✅ Fixed: use moveDir.x, and corrected isFacingRight conditions
         if (moveDir.x < 0 && isFacingRight)
         {
             playerSpriteRenderer.flipX = true;
@@ -73,14 +73,21 @@ public class PlatformerControl : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter2D(Collider2D col)
+void OnTriggerEnter2D(Collider2D col)
+{
+    if (col.CompareTag("Floor"))
     {
         isGrounded = true;
+        playerAnim.SetBool("isGrounded", true);
     }
+}
 
-    // ✅ Fixed: added missing Collider2D parameter
-    void OnTriggerExit2D(Collider2D col)
+void OnTriggerExit2D(Collider2D col)
+{
+    if (col.CompareTag("Floor"))
     {
         isGrounded = false;
+        playerAnim.SetBool("isGrounded", false);
     }
+}
 }
